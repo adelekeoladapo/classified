@@ -110,7 +110,7 @@ function CategoriesCtrl($scope, $state, Service, Factory, categories) {
     }
     
     /** Update Category **/
-    $scope.updateCategory = function(){
+    $scope.updateCategoryX = function(){
         if($('#form-edit-category').smkValidate()){
             $('#edit-category-overlay').css('display', 'none');
             show_loading_overlay();
@@ -130,6 +130,49 @@ function CategoriesCtrl($scope, $state, Service, Factory, categories) {
             });
         }
     }
+    
+    $scope.updateCategory = function(){
+        if($('#form-edit-category').smkValidate()){
+            $('#edit-category-overlay').css('display', 'none');
+            show_loading_overlay();
+            var form_data = new FormData($('#form-edit-category')[0]);
+            $.ajax({
+                type: "POST",
+                url: BASE_URL+"api/update-category",
+                data: form_data,
+                success:function(result, status, xhr){ 
+                    result = JSON.parse(result);
+                    if(result.status){
+                        Service.getCategories().then(function(response){
+                            $scope.categories = $scope.$parent.app_data.categories = response.data;
+                            $scope.base_categories = $scope.factory.getBaseCategories($scope.categories);
+                            hide_loading_overlay();
+                            toast('Category updated successfully');
+                        }, function(error){
+                            hide_loading_overlay();
+                            toast('An error occurred. Try again');
+                        });
+                    }else{
+                        hide_loading_overlay();
+                        toast(result.message);
+                    }
+                },
+                complete: function(){
+                },
+                timeout: 50000,
+                error: function(){
+                    toast("An error occurred. Try again");
+                },
+                //Options to tell jQuery not to process data or worry about content-type.
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        }
+        
+        return false;
+    };
+    
     
     $scope.SubCategory = {};
     

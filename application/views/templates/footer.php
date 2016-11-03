@@ -14,7 +14,7 @@
                     <div class="col-md-3 div">
                         <h4>Support</h4>
                         <ul>
-                            <li><a href="#">support@homebuds.com</a></li>
+                            <li><a href="mailto:support@homebuds.co.uk">support@homebuds.co.uk</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3 div">

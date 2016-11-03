@@ -6,6 +6,7 @@ class Classified extends CI_Controller {
     private $category_model;
     private $location_model;
     private $advert_model;
+    private $user_model;
     
     function __construct() {
         parent::__construct();
@@ -18,6 +19,7 @@ class Classified extends CI_Controller {
         $this->category_model = new CategoryModel();
         $this->location_model = new LocationModel();
         $this->advert_model = new AdvertModel();
+        $this->user_model = new UserModel();
     }
     
     function index($offset = FALSE){
@@ -44,7 +46,7 @@ class Classified extends CI_Controller {
         
         $this->pagination->initialize($config);
         
-        $sort = $this->input->get('order-by');
+        $sort = 'product_date_posted';//$this->input->get('order-by');
         
         $data['products'] = $this->product_model->getSomeProducts($config['per_page'], $offset, $sort);
         $data['no_of_product'] = $no_of_products;
@@ -55,6 +57,8 @@ class Classified extends CI_Controller {
         $data['states'] = $this->location_model->getCountryStates(1);
         
         $data['adverts'] = $this->advert_model->getActivatedAdverts();
+        
+        $data['premium_exist'] = $this->user_model->premiumExist();
         
         $this->load->view('home2', $data);
     }

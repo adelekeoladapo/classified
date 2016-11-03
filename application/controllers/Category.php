@@ -51,10 +51,28 @@ class Category extends CI_Controller {
     
     /** Update Category **/
     function updateCategory(){
+//        $data = new stdClass();
+//        $data = json_decode(file_get_contents('php://input'));
+//        $data->category_slug = $this->penguin->getSlug($data->category_name);
+//        echo $this->model->updateCategory($data);
+        
         $data = new stdClass();
-        $data = json_decode(file_get_contents('php://input'));
+        $data->category_id = $this->input->post('category_id');
+        $data->category_name = $this->input->post('category_name');
         $data->category_slug = $this->penguin->getSlug($data->category_name);
-        echo $this->model->updateCategory($data);
+        
+        $image = $this->upload->uploadImage('category_image');
+        if($image->status){
+            $data->category_image = $image->message['file_name'];
+        }elseif(!$image->status && $image->message == "<p>You did not select a file to upload.</p>"){
+            
+        }else{
+            echo json_encode($image);
+            return;
+        }
+        $this->model->updateCategory($data);
+        echo json_encode(array('status'=> true, 'message'=> 'Category Successfully Updated'));
+        
     }
     
 }

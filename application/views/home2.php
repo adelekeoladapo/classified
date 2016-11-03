@@ -44,9 +44,14 @@
         <!-- Sponsored Ads -->
         <div class="block sponsored-ad">
             <div>
-                <div class="col-md-12 sponsored-block-title">
-                    <h4 class="block-title">Premium <span>Ads</span></h4>
-                </div>
+                <?
+                    if($premium_exist){
+                        echo '<div class="col-md-12 sponsored-block-title">
+                                <h4 class="block-title">Premium <span>Ads</span></h4>
+                            </div>';
+                    }
+                ?>
+                
                 <div class="owl-carousel" id="owl-example" style="background-color: #fff; text-align: center">
                     
                     <?

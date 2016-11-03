@@ -141,5 +141,9 @@ class UserModel extends CI_Model {
         return $this->db->update('user', $data);
     }
 
-    
+    function premiumExist(){
+        $this->db->where('user_account_type', 2);
+        $query = $this->db->get('v_user');
+        return ($query->num_rows()) ? true : false;
+    }
 }

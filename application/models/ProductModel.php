@@ -31,7 +31,7 @@ class ProductModel extends CI_Model {
         $this->db->limit($limit, $offset);
         
         if($sort){
-            $this->db->order_by($sort, 'DESCR');
+            $this->db->order_by($sort, 'DESC');
         }
         
         $query = $this->db->get('v_product');

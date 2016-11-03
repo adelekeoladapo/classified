@@ -34,12 +34,12 @@
                             <span class="short-info"><i class="fa fa-clock-o"></i> <? echo "Posted on ".$this->penguin->formatDate_1($product->product_date_posted)."&nbsp &nbsp &nbsp"; ?><i class="fa fa-map-marker"></i> <? echo $product->state_name.", ".$product->country_name; ?> </span>
                             <div class="photo">
                                 <img src="<? echo base_url(); ?>assets/images/uploads/<? echo ($product_images) ? $product_images[0]->image_name : 'placeholder.png' ?>">
-                                <div class="price-tag"><? echo ($product->product_price > 0) ? "N".$product->product_price : ""; ?></div>
+                                <div class="price-tag" <? echo ($product->product_price > 0) ? '' : 'style="display: none"' ?>><? echo ($product->product_price > 0) ? "N".$product->product_price : ""; ?></div>
                             </div>
                             
                             <div class="row details">
                                 <div class="col-md-12 title">
-                                    <h4>Ads Details</h4>
+                                    <h4>Service Details</h4>
                                 </div>
                                 <div class="col-md-8">
                                     <p class="product-descr">

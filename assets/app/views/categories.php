@@ -77,9 +77,14 @@
             </div>
             <div class="middle">
                 <form id="form-edit-category">
+                    <input type="text" ng-show="false" name="category_id" value="{{ Category.category_id }}">
                     <div class="form-group">
                         <label class="control-label" for="category_name">Category <span class="required-field"> *</span></label>
                         <input type="text" class="form-control" required id="name" name="category_name" ng-model="Category.category_name">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="category_image">Icon</label>
+                        <input type="file" class="form-control" name="category_image" ng-model="Category.category_image">
                     </div>
                 </form>
             </div>

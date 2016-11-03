@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/classified/';
+$config['base_url'] = 'http://localhost:85/classified/';
 //$config['base_url'] = 'https://homebuds.co.uk/';
 
 /*
