@@ -98,6 +98,113 @@ class User extends CI_Controller {
         
     }
     
+    
+    
+    
+    function registerUser_(){
+        
+        $this->load->model('CountryModel');
+        $this->load->model('StateModel');
+        $data['countries'] = $this->CountryModel->getCountries();
+        $data['states'] = $this->StateModel->getCountryStates(1);
+        
+        $this->load->library('form_validation');
+        
+        $this->form_validation->set_error_delimiters('<div class="ci-error help-block smk-error-msg">', '</div>');
+        
+        $this->form_validation->set_rules('firstname', 'First Name', 'trim|required');
+        $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required');
+        $this->form_validation->set_rules('email', 'Email Address','trim|required|is_unique[user.user_email]',
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        $this->form_validation->set_rules('username', 'Username','trim|required|is_unique[user.user_username]',
+            array(
+                    'required'      => 'You have not provided %s.',
+                    'is_unique'     => 'This %s already exists.'
+            )
+        );
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[40]');
+        $this->form_validation->set_rules('terms', 'Terms & Conditions', 'trim|required');
+        
+        $this->form_validation->set_rules('country', 'Country', 'trim|required');
+        $this->form_validation->set_rules('state', 'State', 'trim|required');
+        $this->form_validation->set_rules('city', 'City', 'trim|required');
+        $this->form_validation->set_rules('address', 'Address', 'trim|required');
+        $this->form_validation->set_rules('phone', 'Phone No', 'trim|required');
+        
+        
+        if($this->form_validation->run() == FALSE){
+            
+            
+            $this->load->view('sign-up-2', $data);
+        }else{
+            
+            $loc = new stdClass();
+            $loc->location_country_id = $this->input->post('country');
+            $loc->location_state_id = $this->input->post('state');
+            $loc->location_city = $this->input->post('city');
+            $loc->location_address = $this->input->post('address');
+
+            $this->load->model('LocationModel');
+            $location_id = $this->LocationModel->insertLocation($loc);
+            
+            
+            $user = new stdClass();
+            $user->user_firstname = $this->input->post('firstname');
+            $user->user_lastname = $this->input->post('lastname');
+            $user->user_email = $this->input->post('email');
+            $user->user_username = $this->input->post('username');
+            $user->user_password = $this->encrypt->encode_password($this->input->post('password'));
+            $user->user_date_registered = $this->penguin->getTime();
+                    
+            
+            $user->user_location_id = $location_id;
+            $user->user_phone = $this->input->post('phone');
+            $user->user_account_type = 1;//$this->input->post('account-type');
+            $user->user_status = 1;
+            $user->user_date_activated = $this->penguin->getTime();
+            
+            $id = $this->model->insertUser($user);
+            
+            if($id){
+                $content = '<tr>
+                                <td bgcolor="#30373b" style="padding: 40px 30px 40px 30px;">
+                                    <b style="color: #fff; font-family: Arial, sans-serif; font-size: 15px; display: block; font-weight: normal; text-align: center;">Hello, '.$user->user_firstname.'</b>
+
+                                    <p style="border: solid 1px #a9adb0; width: 10%; margin: auto; margin-top: 20px; margin-bottom: 20px"></p>
+
+                                    <p style="color: #a9adb0; font-family: Arial, sans-serif; font-size: 15px; font-weight: normal; text-align: center">
+                                            Click the button below to activate your account
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#fff" style="border-bottom: solid 1px #eee;">
+                                    <p style="color: #a9adb0; font-family: Arial, sans-serif; font-size: 15px; font-weight: normal; text-align: center; line-height: 25px;">
+                                        Your email address: <br> <a href="#">'.$user->user_email.'</a>
+                                    </p>
+                                    <p style="color: #a9adb0; font-family: Arial, sans-serif; font-size: 15px; font-weight: normal; text-align: center;     line-height: 30px;">
+                                        <a href="'.  base_url()."activate-account/".$this->encrypt->do_encode($id).'" style="background-color: #79b657; border: solid 1px #79b657; padding: 10px 45px; border-radius: 4px; color: #fff; text-decoration: none">Activate my account</a>
+                                    </p>';
+                
+                $this->mail_model->sendEmail('HomeBuds', 'info@homebuds.co.uk', $user->user_email, 'Activate Your Account', $content);
+                $encrypted_email = $this->encrypt->do_encode($user->user_email);
+                redirect(base_url().'user/registration-successful/'.$encrypted_email);
+            }else{
+                echo 'An error occurred';
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    
+    
     /*
      * Show successful message after registration
      */

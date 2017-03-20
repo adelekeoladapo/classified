@@ -66,6 +66,8 @@ $route['forgot-password'] = 'user/forgotPassword';
 $route['reset-password/(:any)'] = 'user/resetPassword/$1';
 $route['my-profile'] = 'user/myProfile';
 
+$route['sandbox_regiister'] = 'user/registerUser_';
+
 
 
 /** Admin urls **/
